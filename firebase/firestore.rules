@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Um usuário só existe para si mesmo.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /transactions/{transactionId} {
+
+      function isOwner() {
+        return request.auth != null && request.auth.uid == resource.data.userId;
+      }
+
+      function isValidPayload(data) {
+        return data.userId == request.auth.uid
+          && data.type in ['Credit', 'Debit']
+          && data.value is number
+          && data.value > 0
+          && data.value <= 1000000
+          && data.category is string
+          && data.category.size() > 0
+          && data.date is timestamp;
+      }
+
+      // Só o dono lê. Filtros e paginação do app rodam sempre com
+      // where('userId', '==', uid), então as queries passam.
+      allow read: if isOwner();
+
+      allow create: if request.auth != null && isValidPayload(request.resource.data);
+
+      // Não permite trocar o dono de uma transação existente.
+      allow update: if isOwner()
+        && isValidPayload(request.resource.data)
+        && request.resource.data.userId == resource.data.userId;
+
+      allow delete: if isOwner();
+    }
+  }
+}

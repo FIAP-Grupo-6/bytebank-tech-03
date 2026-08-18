@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "ByteBank",
+    "slug": "bytebank-mobile",
+    "version": "3.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "bytebank",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "br.com.fiap.grupo6.bytebank",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "O ByteBank usa sua galeria para anexar recibos às transações.",
+        "NSCameraUsageDescription": "O ByteBank usa a câmera para fotografar recibos de transações."
+      }
+    },
+    "android": {
+      "package": "br.com.fiap.grupo6.bytebank",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#121417"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O ByteBank usa sua galeria para anexar recibos às transações.",
+          "cameraPermission": "O ByteBank usa a câmera para fotografar recibos de transações."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#121417",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
