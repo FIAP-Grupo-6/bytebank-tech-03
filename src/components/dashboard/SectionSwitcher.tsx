@@ -25,9 +25,9 @@ interface SectionSwitcherProps {
 }
 
 // Habilita o LayoutAnimation no Android, que ainda exige opt-in explícito.
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+// if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 
 /**
  * Alternador de seções do dashboard. É a peça animada central do app.
