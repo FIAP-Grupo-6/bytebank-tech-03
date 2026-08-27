@@ -84,15 +84,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         );
 
         const name = displayName.trim();
-        await updateProfile(credential.user, { displayName: name });
 
-        // Documento de perfil: o app não depende dele hoje, mas é onde
-        // preferências e metadados vão morar sem inflar o token de auth.
-        await setDoc(doc(db, 'users', credential.user.uid), {
-          displayName: name,
-          email: email.trim(),
-          createdAt: serverTimestamp(),
-        });
+        await Promise.all([
+          updateProfile(
+            credential.user,
+            { displayName: name }
+          ),
+          setDoc(
+            doc(db, 'users', credential.user.uid),
+            {
+              displayName: name,
+              email: email.trim(),
+              createdAt: serverTimestamp(),
+            }
+          )
+        ])
 
         // `updateProfile` não redispara onAuthStateChanged, então o nome só
         // apareceria depois de um reload sem este set explícito.

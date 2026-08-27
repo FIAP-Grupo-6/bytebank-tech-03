@@ -312,10 +312,10 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
         throw new Error(toFriendlyMessage(caught, 'Não foi possível salvar a transação.'));
       }
 
-      // A lista paginada não é reativa, então recarrega. Os gráficos se
-      // atualizam sozinhos pelo onSnapshot.
-      await loadFirstPage('refresh');
-      await refreshBalance();
+      await Promise.all([
+        loadFirstPage('refresh'),
+        refreshBalance()
+      ])      
     },
     [userId, loadFirstPage, refreshBalance]
   );
@@ -323,10 +323,10 @@ export function TransactionsProvider({ children }: { children: ReactNode }) {
   const removeTransaction = useCallback(
     async (transaction: Transaction) => {
       try {
-        await deleteTransaction(transaction.id);
-        if (transaction.receiptPath) {
-          await deleteReceipt(transaction.receiptPath);
-        }
+        await Promise.all([
+          deleteTransaction(transaction.id),
+          transaction.receiptPath ? deleteReceipt(transaction.receiptPath) : Promise.resolve()
+        ])
       } catch (caught) {
         throw new Error(toFriendlyMessage(caught, 'Não foi possível excluir a transação.'));
       }
