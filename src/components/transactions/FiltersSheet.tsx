@@ -150,7 +150,7 @@ export function FiltersSheet({ visible, filters, onApply, onClose }: FiltersShee
                   label="De"
                   value={draft.dateFrom ? `${draft.dateFrom}T12:00:00` : ''}
                   placeholder="Início"
-                  maximumDate={new Date()}
+                  maximumDate={draft.dateTo ? new Date(`${draft.dateTo}T12:00:00`) : new Date()}
                   onChange={(iso) =>
                     setDraft((current) => ({ ...current, dateFrom: toISODate(new Date(iso)) }))
                   }
