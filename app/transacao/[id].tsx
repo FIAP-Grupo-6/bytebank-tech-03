@@ -50,7 +50,7 @@ export default function TransactionFormScreen() {
   const [categorySheet, setCategorySheet] = useState(false);
   const [subcategorySheet, setSubcategorySheet] = useState(false);
   /** Recibo que estava salvo e foi trocado — apagado só depois do save. */
-  const [replacedReceiptPath, setReplacedReceiptPath] = useState<string | null>(null);
+  const [replacedReceiptPath, setReplacedReceiptPath] = useState<string[]>([]);
 
   const { control, handleSubmit, watch, setValue, reset, formState } =
     useForm<TransactionFormValues>({
@@ -145,9 +145,9 @@ export default function TransactionFormScreen() {
         isNew ? undefined : id
       );
 
-      // Só agora o recibo antigo pode ir: se o save falhar, o arquivo ainda
-      // está lá e a transação continua consistente.
-      if (replacedReceiptPath) await deleteReceipt(replacedReceiptPath);
+      if (replacedReceiptPath.length > 0) {
+        await Promise.all(replacedReceiptPath.map(path => deleteReceipt(path)))
+      }
 
       router.back();
     } catch (caught) {
@@ -339,9 +339,8 @@ export default function TransactionFormScreen() {
             onUploadingChange={setUploading}
             error={formState.errors.receiptUrl?.message}
             onChange={(next) => {
-              // Guarda o caminho antigo para apagar depois do save.
               if (receiptPath && receiptPath !== next.path) {
-                setReplacedReceiptPath(receiptPath);
+                setReplacedReceiptPath((current) => [...current, receiptPath]);
               }
               setValue('receiptUrl', next.url, { shouldValidate: false });
               setValue('receiptPath', next.path, { shouldValidate: false });
