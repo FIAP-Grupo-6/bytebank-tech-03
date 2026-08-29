@@ -37,10 +37,17 @@ export function startOfMonth(date: Date): Date {
   return startOfDay(copy);
 }
 
-export function subMonths(date: Date, amount: number): Date {
-  const copy = new Date(date);
-  copy.setMonth(copy.getMonth() - amount);
-  return copy;
+export function subMonths(date: Date, months: number): Date {
+  const target = new Date(date);
+  const originalDay = target.getDate();
+
+  target.setDate(1);
+  target.setMonth(target.getMonth() - months);
+
+  const daysInTargetMonth = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+  target.setDate(Math.min(originalDay, daysInTargetMonth));
+
+  return target;
 }
 
 /** Chave estável de agrupamento mensal: "2026-07". */
