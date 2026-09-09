@@ -208,7 +208,7 @@ A criação leva alguns minutos. Faça isso **antes** de gravar o vídeo.
 ## Arquitetura
 
 ```
-bytebank-mobile/
+bytebank-tech-03/
 ├── app/                          # Rotas (expo-router: arquivo = rota)
 │   ├── _layout.tsx               # Providers + porteiro de autenticação
 │   ├── index.tsx                 # Redireciona conforme a sessão
